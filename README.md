@@ -353,8 +353,8 @@ and archiver for the target. Once set, we only need to pass the `--target` flag 
 
 [configuration system]: http://doc.crates.io/config.html
 
-Cargo configuration is stored in a TOML file, the keys we are interested in are
-`target.$rustc_target.ar` and `target.$rustc_target.linker`. The values to store in these keys are
+Cargo configuration is stored in a TOML file, the key we are interested in is
+`target.$rustc_target.linker`. The value to store in this key is
 the same we passed to `rustc` in the previous section. It's up to you to decide if you make this
 configuration global or project specific.
 
