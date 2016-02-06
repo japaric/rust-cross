@@ -1,0 +1,22 @@
+dist: trusty
+language: rust
+sudo: required
+rust:
+  - stable
+  - beta
+  - nightly
+
+before_install:
+  - sudo apt-get update
+
+install:
+  - sudo apt-get install -qq gcc-arm-linux-gnueabihf
+
+script:
+  - ci/run.sh
+
+branches:
+  only: master
+
+notifications:
+  email: false
