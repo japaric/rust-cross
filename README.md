@@ -49,7 +49,6 @@ $ rm -r tmp
 $ mkdir -p ~/.cargo
 $ cat >>~/.cargo/config <<EOF
 > [target.arm-unknown-linux-gnueabihf]
-> ar = "arm-linux-gnueabihf-ar"
 > linker = "arm-linux-gnueabihf-gcc"
 > EOF
 
@@ -318,8 +317,6 @@ Cross compiling with `rustc` only requires passing a few extra flags to its invo
 - `--target=$rustc_target`, tells `rustc` we are cross compiling for `$rustc_target`.
 - `-C linker=$gcc_prefix-gcc`, instructs `rustc` to use a cross linker instead of the native one
     (`cc`).
-- `-C ar=$gcc_prefix-ar`, instructs `rustc` to use a cross archiver instead of the native one
-   (`ar`).
 
 Next, an example to test the cross compilation setup so far:
 
@@ -338,7 +335,6 @@ fn main() {
 $ rustc \
     --target=arm-unknown-linux-gnueabihf \
     -C linker=arm-linux-gnueabihf-gcc \
-    -C ar=arm-linux-gnueabihf-gcc \
     hello.rs
 ```
 
@@ -391,7 +387,6 @@ clap = "2.0.4"
 $ mkdir .cargo
 $ cat >.cargo/config <<EOF
 > [target.arm-unknown-linux-gnueabihf]
-> ar = "arm-linux-gnueabihf-ar"
 > linker = "arm-linux-gnueabihf-gcc"
 > EOF
 ```
