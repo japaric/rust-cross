@@ -1,3 +1,8 @@
+[![travis-badge][]][travis]
+
+[travis-badge]: https://img.shields.io/travis/japaric/rust-cross/master.svg?style=flat-square
+[travis]: https://travis-ci.org/japaric/rust-cross
+
 # `rust-cross`
 
 > Everything you need to know about cross compiling Rust programs!
