@@ -199,6 +199,13 @@ supported by your installed `rustc`, without having to fetch and decipher what t
 
 [Soon]: https://github.com/rust-lang/rust/pull/31358
 
+**NOTE** If you are wondering what's the difference between `arm-unknown-linux-gnueabihf` and
+`armv7-unknonw-linux-gnueabihf`, the `arm` triple covers ARMv6 and ARMv7 processors whereas `armv7`
+only supports ARMv7 processors. For this reason, the `armv7` triple enables optimizations that are
+only possible on ARMv7 processors. OTOH, if you use the `arm` triple you would have to opt-in to
+these optimizations by passing extra flags like `-C target-feature=+neon` to `rustc`. TL;DR For
+faster binaries, use `armv7` if your target has an ARMv7 processor.
+
 If you didn't find a triple that matches your target system, then you are going to need to
 [create a target specification file].
 
@@ -207,7 +214,7 @@ If you didn't find a triple that matches your target system, then you are going 
 From this point forwards, I'll use the term **$rustc_target** to refer to the triple you found in
 this section. For example, if you found that your target is `arm-unknown-linux-gnueabihf`, then
 whenever you see something like `--target=$rustc_target` mentally expand the `$rustc_target` bit so
-you end with `--target=arm-unknown-linux-gnueaibhf`
+you end with `--target=arm-unknown-linux-gnueaibhf`.
 
 Similarly, I'll use the **$host** term to refer to the host triple. You can find this triple in the
 `rustc -Vv` output under the host field. For example, my host system has triple
