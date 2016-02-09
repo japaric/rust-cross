@@ -200,7 +200,7 @@ supported by your installed `rustc`, without having to fetch and decipher what t
 [Soon]: https://github.com/rust-lang/rust/pull/31358
 
 **NOTE** If you are wondering what's the difference between `arm-unknown-linux-gnueabihf` and
-`armv7-unknonw-linux-gnueabihf`, the `arm` triple covers ARMv6 and ARMv7 processors whereas `armv7`
+`armv7-unknown-linux-gnueabihf`, the `arm` triple covers ARMv6 and ARMv7 processors whereas `armv7`
 only supports ARMv7 processors. For this reason, the `armv7` triple enables optimizations that are
 only possible on ARMv7 processors. OTOH, if you use the `arm` triple you would have to opt-in to
 these optimizations by passing extra flags like `-C target-feature=+neon` to `rustc`. TL;DR For
