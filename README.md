@@ -312,7 +312,7 @@ directory: `$(rustc --print sysroot)/lib/rustlib/$rustc_target`.
 
 **NOTE** If you are using the nightly channel, every time you update your Rust install you'll have
 to install a new set of cross compiled standard crates. To do so, simply download a new tarball and
-use the `install.sh` script as before. AFAICT the script will also take core of removing the old set
+use the `install.sh` script as before. AFAICT the script will also take care of removing the old set
 of crates.
 
 ## Cross compiling with `rustc`
