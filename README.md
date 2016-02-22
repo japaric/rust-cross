@@ -105,6 +105,8 @@ text before jumping into the advanced topics section.
         - [can't load library](#cant-load-library)
         - [`$symbol` not found](#symbol-not-found)
         - [illegal instruction](#illegal-instruction)
+- [FAQ](#faq)
+    - [I want to build binaries for Linux, Mac and Windows. How do I cross compile from Linux to Mac?](#i-want-to-build-binaries-for-linux-mac-and-windows-how-do-i-cross-compile-from-linux-to-mac)
 - [License](#license)
     - [Contribution](#contribution)
 
@@ -929,6 +931,23 @@ system. Among the possible causes of this problem we have:
     float instructions into your binary. **Solution**: Get the correct toolchain, one that was built
     with soft float support. Hint: look for the flag `--with-float` in the output of
     `$gcc_prefix-gcc -v`.
+
+## FAQ
+
+### I want to build binaries for Linux, Mac and Windows. How do I cross compile from Linux to Mac?
+
+Short answer: You don't.
+
+It's hard to find a cross C toolchain (and cross compiled C libraries) between different OSes
+(except perhaps from Linux to Windows). A much simpler and less error prone way is to build natively
+for these targets because they are [tier 1] platforms. You may not have direct access to all these
+OSes but that's not a problem because you can use CI services like [Travis CI] and [AppVeyor]. Check
+my [rust-everywhere] project for instructions on how to do that.
+
+[tier 1]: https://doc.rust-lang.org/book/getting-started.html#tier-1
+[Travis CI]: https://travis-ci.org/
+[AppVeyor]: https://www.appveyor.com/
+[rust-everywhere]: https://github.com/japaric/rust-everywhere
 
 ## License
 
