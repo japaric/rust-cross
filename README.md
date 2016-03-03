@@ -24,7 +24,7 @@ is easy to setup and even easier to perform.
 ```
 # Install Rust, multirust heavily recommended
 $ sudo apt-get install -qq curl git
-$ curl -sf https://raw.githubusercontent.com/brson/multirust/master/blastoff.sh | sh
+$ curl -sf https://raw.githubusercontent.com/brson/multirust/master/quick-install.sh | sh
 
 # Step 0: Our target is an ARMv7 device, the triple for this target is `arm-unknown-linux-gnueabihf`
 
