@@ -32,18 +32,7 @@ $ curl -sf https://raw.githubusercontent.com/brson/multirust/master/quick-instal
 $ sudo apt-get install -qq gcc-arm-linux-gnueabihf
 
 # Step 2: Install the cross compiled standard crates
-# (NOTE In the future (*), all these steps will be replaced by a single command:
-#  `multirust add-target arm-unknown-linux-gnueabihf`)
-$ mkdir tmp
-$ cd tmp
-$ rustc -V
-rustc 1.6.0 (c30b771ad 2016-01-19)
-$ curl -O http://static.rust-lang.org/dist/rust-std-1.6.0-arm-unknown-linux-gnueabihf.tar.gz
-$ tar xzf rust-std-1.6.0-arm-unknown-linux-gnueabihf.tar.gz
-$ cd rust-std-1.6.0-arm-unknown-linux-gnueabihf
-$ ./install.sh --prefix=$(rustc --print sysroot)
-$ cd ../..
-$ rm -r tmp
+$ multirust add-target nightly arm-unknown-linux-gnueabihf
 
 # Step 3: Configure cargo for cross compilation
 $ mkdir -p ~/.cargo
@@ -65,10 +54,6 @@ $ scp target/arm-unknown-linux-gnueabihf/debug/hello me@arm:~
 $ ssh me@arm:~ ./hello
 Hello, world!
 ```
-
-(*) When [this] lands.
-
-[this]: https://github.com/brson/multirust/pull/112
 
 1\. 2. 3. You are now cross compiling!
 
@@ -173,33 +158,27 @@ about the target:
     there are only two ABIs: gnu and msvc.
 
 Next you need to compare this information against the targets supported by `rustc`, and check if
-there's a match. Currently, there's no easy way to get a list of the supported targets, but you
-should be able to find all the supported targets in this [file] (**NOTE**: the linked file is
-**not** the latest revision). Here's the list of supported targets as of
-`rustc 1.8.0-nightly (3c9442fc5 2016-02-04)`:
-
-[file]: https://github.com/rust-lang/rust/blob/3c9442fc503fe397b8d3495d5a7f9e599ad63cf6/src/librustc_back/target/mod.rs#L416-L465
+there's a match. If you have a nightly-2016-02-14, 1.8.0-beta.1 or newer `rustc` you can use the
+`rustc --print target-list` command to get the full list of supported targets. Here's the list of
+supported targets as of 1.8.0-beta.1:
 
 ```
-aarch64-apple-ios                i686-pc-windows-msvc             x86_64-apple-ios
-aarch64-linux-android            i686-unknown-dragonfly           x86_64-pc-windows-gnu
-aarch64-unknown-linux-gnu        i686-unknown-freebsd             x86_64-pc-windows-msvc
-arm-linux-androideabi            i686-unknown-linux-gnu           x86_64-rumprun-netbsd
-arm-unknown-linux-gnueabi        le32-unknown-nac                 x86_64-sun-solaris
-arm-unknown-linux-gnueabihf      mips-unknown-linux-gnu           x86_64-unknown-bitrig
-armv7-apple-ios                  mips-unknown-linux-musl          x86_64-unknown-dragonfly
-armv7-unknown-linux-gnueabihf    mipsel-unknown-linux-gnu         x86_64-unknown-freebsd
-armv7s-apple-ios                 mipsel-unknown-linux-musl        x86_64-unknown-linux-gnu
-i386-apple-ios                   powerpc-unknown-linux-gnu        x86_64-unknown-linux-musl
-i686-apple-darwin                powerpc64-unknown-linux-gnu      x86_64-unknown-netbsd
-i686-linux-android               powerpc64le-unknown-linux-gnu    x86_64-unknown-openbsd
-i686-pc-windows-gnu              x86_64-apple-darwin
+$ rustc --print target-list | pr -tw100 --columns 3
+aarch64-apple-ios                i686-pc-windows-gnu              x86_64-apple-darwin
+aarch64-linux-android            i686-pc-windows-msvc             x86_64-apple-ios
+aarch64-unknown-linux-gnu        i686-unknown-dragonfly           x86_64-pc-windows-gnu
+arm-linux-androideabi            i686-unknown-freebsd             x86_64-pc-windows-msvc
+arm-unknown-linux-gnueabi        i686-unknown-linux-gnu           x86_64-rumprun-netbsd
+arm-unknown-linux-gnueabihf      i686-unknown-linux-musl          x86_64-sun-solaris
+armv7-apple-ios                  le32-unknown-nacl                x86_64-unknown-bitrig
+armv7-unknown-linux-gnueabihf    mips-unknown-linux-gnu           x86_64-unknown-dragonfly
+armv7s-apple-ios                 mips-unknown-linux-musl          x86_64-unknown-freebsd
+asmjs-unknown-emscripten         mipsel-unknown-linux-gnu         x86_64-unknown-linux-gnu
+i386-apple-ios                   mipsel-unknown-linux-musl        x86_64-unknown-linux-musl
+i586-unknown-linux-gnu           powerpc-unknown-linux-gnu        x86_64-unknown-netbsd
+i686-apple-darwin                powerpc64-unknown-linux-gnu      x86_64-unknown-openbsd
+i686-linux-android               powerpc64le-unknown-linux-gnu
 ```
-
-**NOTE**: [Soon], you'll be able to call `rustc --print targets` to get the list of targets
-supported by your installed `rustc`, without having to fetch and decipher what the source code says.
-
-[Soon]: https://github.com/rust-lang/rust/pull/31358
 
 **NOTE** If you are wondering what's the difference between `arm-unknown-linux-gnueabihf` and
 `armv7-unknown-linux-gnueabihf`, the `arm` triple covers ARMv6 and ARMv7 processors whereas `armv7`
@@ -244,9 +223,11 @@ compile a C program, preferably something not trivial, and test executing it on 
 
 As to where to get the C cross toolchain, that will depend on your system. Some Linux distributions
 provide packaged cross compilers. In other cases, you'll need to compile the cross compiler
-yourself (tools like [crostool-ng] can help with that endeavor).
+yourself. Tools like [crostool-ng] can help with that endeavor. For Linux to OSX, check the
+[osxcross] project.
 
 [crosstool-ng]: https://github.com/crosstool-ng/crosstool-ng
+[osxcross]: https://github.com/tpoechtrager/osxcross
 
 Some examples of packaged cross compilers below:
 
@@ -279,11 +260,9 @@ crate to cross compile your program. The easiest way to get it is from the [offi
 
 [official builds]: http://static.rust-lang.org/dist/
 
-**NOTE** If you use `multirust`, in the [future] you'll be able to install the cross compiled crates
-using `multirust add-target $rustc_target`. In the meantime, use these instructions to install the
-crates.
-
-[future]: https://github.com/brson/multirust/pull/112
+If you are using multirust, as of 2016-03-08, you can install these crates with a single command:
+`multirust add-target nightly $rustc_target`. If you are not, follow the instructions below to
+install the crates manually.
 
 The tarball you want is `$date/rust-std-nightly-$rustc_target.tar.gz`. Where `$date` usually matches
 with the `rustc` commit date shown in `rustc -V`, although on occasion the dates may differ by one
