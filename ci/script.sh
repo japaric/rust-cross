@@ -6,7 +6,7 @@ triple=arm-unknown-linux-gnueabihf
 prefix=arm-linux-gnueabihf
 
 main() {
-  # Done in .travis.yml
+  # Done in ci/install.sh
   #install_c_toolchain
 
   install_standard_crates
@@ -16,23 +16,25 @@ main() {
   test_cargo_project
 }
 
-# TODO replace this with multirust add-target $triple
 install_standard_crates() {
-  local tarball=
   local version=
 
-  case "$TRAVIS_RUST_VERSION" in
+  case "$RUST_CHANNEL" in
     stable)
       version=$(rustc -V | cut -d' ' -f2 | cut -d'-' -f1)
       tarball="rust-std-${version}-arm-unknown-linux-gnueabihf.tar.gz"
       ;;
     beta)
-      tarball="rust-std-beta-arm-unknown-linux-gnueabihf.tar.gz"
+      version=beta
       ;;
     nightly)
-      tarball="rust-std-nightly-arm-unknown-linux-gnueabihf.tar.gz"
+      multirust add-target nightly $triple
+
+      return
       ;;
   esac
+
+  local tarball="rust-std-${version}-arm-unknown-linux-gnueabihf.tar.gz"
 
   mkdir tmp
 

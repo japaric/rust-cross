@@ -1,19 +1,22 @@
+language: generic
+
 dist: trusty
-language: rust
+
 sudo: required
-rust:
-  - stable
-  - beta
-  - nightly
+
+env:
+  - RUST_CHANNEL=stable
+  - RUST_CHANNEL=beta
+  - RUST_CHANNEL=nightly
 
 before_install:
-  - sudo apt-get update
+  - export PATH="$PATH:~/multirust/bin"
 
 install:
-  - sudo apt-get install -qq gcc-arm-linux-gnueabihf
+  - ci/install.sh
 
 script:
-  - ci/run.sh
+  - ci/script.sh
 
 branches:
   only: master
