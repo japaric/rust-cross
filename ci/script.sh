@@ -17,16 +17,22 @@ install_standard_crates() {
 configure_cargo() {
   local prefix
 
-  mkdir -p ~/.cargo
-
   case "$TARGET" in
     arm*gnueabihf)
       prefix=arm-linux-gnueabihf
       ;;
+    arm*gnueabi)
+      prefix=arm-linux-gnueabi
+      ;;
     mipsel-*musl)
       prefix=mipsel-openwrt-linux
       ;;
+    *)
+      return
+      ;;
   esac
+
+  mkdir -p ~/.cargo
 
   cat >>~/.cargo/config <<EOF
 [target.$TARGET]
