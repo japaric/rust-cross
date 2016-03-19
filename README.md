@@ -26,31 +26,31 @@ is easy to setup and even easier to perform.
 $ sudo apt-get install -qq curl git
 $ curl -sf https://raw.githubusercontent.com/brson/multirust/master/quick-install.sh | sh
 
-# Step 0: Our target is an ARMv7 device, the triple for this target is `arm-unknown-linux-gnueabihf`
+# Step 0: Our target is an ARMv7 device, the triple for this target is `armv7-unknown-linux-gnueabihf`
 
 # Step 1: Install the C cross toolchain
 $ sudo apt-get install -qq gcc-arm-linux-gnueabihf
 
 # Step 2: Install the cross compiled standard crates
-$ multirust add-target nightly arm-unknown-linux-gnueabihf
+$ multirust add-target nightly armv7-unknown-linux-gnueabihf
 
 # Step 3: Configure cargo for cross compilation
 $ mkdir -p ~/.cargo
 $ cat >>~/.cargo/config <<EOF
-> [target.arm-unknown-linux-gnueabihf]
+> [target.armv7-unknown-linux-gnueabihf]
 > linker = "arm-linux-gnueabihf-gcc"
 > EOF
 
 # Test cross compiling a Cargo project
 $ cargo new --bin hello
 $ cd hello
-$ cargo build --target=arm-unknown-linux-gnueabihf
+$ cargo build --target=armv7-unknown-linux-gnueabihf
    Compiling hello v0.1.0 (file:///home/ubuntu/hello)
-$ file target/arm-unknown-linux-gnueabihf/debug/hello
+$ file target/armv7-unknown-linux-gnueabihf/debug/hello
 hello: ELF 32-bit LSB  shared object, ARM, EABI5 version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=67b58f42db4842dafb8a15f8d47de87ca12cc7de, not stripped
 
 # Test the binary
-$ scp target/arm-unknown-linux-gnueabihf/debug/hello me@arm:~
+$ scp target/armv7-unknown-linux-gnueabihf/debug/hello me@arm:~
 $ ssh me@arm:~ ./hello
 Hello, world!
 ```
