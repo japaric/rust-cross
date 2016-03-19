@@ -4,14 +4,26 @@ sudo: false
 
 matrix:
   include:
-    - env: TARGET=armv7-unknown-linux-gnueabihf
+    - env: TARGET=arm-unknown-linux-gnueabi
       addons:
         apt:
-          packages:
+          packages: &armhf
+            - gcc-arm-linux-gnueabi
+            - libc6-armel-cross
+            - libc6-dev-armel-cross
+    - env: TARGET=arm-unknown-linux-gnueabihf
+      addons:
+        apt:
+          packages: &armhf
             - gcc-arm-linux-gnueabihf
             - libc6-armhf-cross
             - libc6-dev-armhf-cross
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+      addons:
+        apt:
+          packages: *armhf
     - env: TARGET=mipsel-unknown-linux-musl
+    - env: TARGET=x86_64-unknown-linux-musl
   allow_failures:
     # libstd for mipsel-unknown-linux-musl not available yet
     - env: TARGET=mipsel-unknown-linux-musl
