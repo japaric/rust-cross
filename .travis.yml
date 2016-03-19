@@ -1,22 +1,29 @@
 language: generic
 
-dist: trusty
+sudo: false
 
-sudo: required
-
-env:
-  - RUST_CHANNEL=stable
-  - RUST_CHANNEL=beta
-  - RUST_CHANNEL=nightly
-
-before_install:
-  - export PATH="$PATH:~/multirust/bin"
+matrix:
+  include:
+    - env: TARGET=armv7-unknown-linux-gnueabihf
+      addons:
+        apt:
+          packages:
+            - gcc-arm-linux-gnueabihf
+            - libc6-armhf-cross
+            - libc6-dev-armhf-cross
+    - env: TARGET=mipsel-unknown-linux-musl
+  allow_failures:
+    # libstd for mipsel-unknown-linux-musl not available yet
+    - env: TARGET=mipsel-unknown-linux-musl
 
 install:
-  - ci/install.sh
+  - export PATH="$PATH:$HOME/multirust/bin"
+  - export STAGING_DIR="$HOME/openwrt"
+  - bash ci/install.sh
+  - export PATH="$PATH:$(find $STAGING_DIR -maxdepth 1 -name 'toolchain*' -print -quit)/bin"
 
 script:
-  - ci/script.sh
+  - bash ci/script.sh
 
 branches:
   only: master
