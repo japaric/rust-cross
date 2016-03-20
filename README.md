@@ -57,6 +57,8 @@ Hello, world!
 
 1\. 2. 3. You are now cross compiling!
 
+For more examples check the [Travis CI builds](https://travis-ci.org/japaric/rust-cross).
+
 The rest of the guide will explain and generalize each step performed in the previous example.
 
 ## Table of Contents
