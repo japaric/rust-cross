@@ -31,10 +31,6 @@ matrix:
             - gcc-multilib
     - env: TARGET=mipsel-unknown-linux-musl
     - env: TARGET=x86_64-unknown-linux-musl
-  allow_failures:
-    # libstd for these targets is not available yet
-    - env: TARGET=mipsel-unknown-linux-musl
-    - env: TARGET=i686-unknown-linux-musl
 
 install:
   - export PATH="$PATH:$HOME/multirust/bin"
