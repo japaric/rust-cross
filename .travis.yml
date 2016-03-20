@@ -4,10 +4,11 @@ sudo: false
 
 matrix:
   include:
+    # Note: apt packages are the C cross compiler and the cross compiled C library
     - env: TARGET=arm-unknown-linux-gnueabi
       addons:
         apt:
-          packages: &armhf
+          packages:
             - gcc-arm-linux-gnueabi
             - libc6-armel-cross
             - libc6-dev-armel-cross
@@ -22,11 +23,18 @@ matrix:
       addons:
         apt:
           packages: *armhf
+    - env: TARGET=i686-unknown-linux-musl
+    - env: TARGET=i686-unknown-linux-gnu
+      addons:
+        apt:
+          packages:
+            - gcc-multilib
     - env: TARGET=mipsel-unknown-linux-musl
     - env: TARGET=x86_64-unknown-linux-musl
   allow_failures:
-    # libstd for mipsel-unknown-linux-musl not available yet
+    # libstd for these targets is not available yet
     - env: TARGET=mipsel-unknown-linux-musl
+    - env: TARGET=i686-unknown-linux-musl
 
 install:
   - export PATH="$PATH:$HOME/multirust/bin"
