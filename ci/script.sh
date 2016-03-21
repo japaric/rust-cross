@@ -47,7 +47,7 @@ test_cargo_project() {
   cd hello
   cargo build --target $TARGET
 
-  if [ "$TARGET" =~ "windows" ]; then
+  if [[ "$TARGET" =~ "windows" ]]; then
     file target/$TARGET/debug/hello.exe
   else
     file target/$TARGET/debug/hello
