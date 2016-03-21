@@ -1,5 +1,3 @@
-#!/bin/bash
-
 set -ex
 
 main() {
@@ -18,14 +16,17 @@ configure_cargo() {
   local prefix
 
   case "$TARGET" in
-    arm*gnueabihf)
+    arm*-unknown-linux-gnueabihf)
       prefix=arm-linux-gnueabihf
       ;;
-    arm*gnueabi)
+    arm-unknown-linux-gnueabi)
       prefix=arm-linux-gnueabi
       ;;
-    mipsel-*musl)
+    mipsel-unknown-linux-musl)
       prefix=mipsel-openwrt-linux
+      ;;
+    x86_64-pc-windows-gnu)
+      prefix=x86_64-w64-mingw32
       ;;
     *)
       return
@@ -46,7 +47,11 @@ test_cargo_project() {
   cd hello
   cargo build --target $TARGET
 
-  file target/$TARGET/debug/hello
+  if [[ "$TARGET" =~ "windows" ]]; then
+    file target/$TARGET/debug/hello.exe
+  else
+    file target/$TARGET/debug/hello
+  fi
 }
 
 main

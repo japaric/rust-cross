@@ -1,5 +1,3 @@
-#!/bin/bash
-
 set -ex
 
 install_multirust() {
