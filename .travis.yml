@@ -1,7 +1,5 @@
 language: generic
 
-sudo: false
-
 matrix:
   include:
     # Note: apt packages are the C cross compiler and the cross compiled C library
@@ -31,6 +29,13 @@ matrix:
             - gcc-multilib
     - env: TARGET=mipsel-unknown-linux-musl
     - env: TARGET=x86_64-unknown-linux-musl
+    - env: TARGET=x86_64-pc-windows-gnu
+      dist: trusty
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - gcc-mingw-w64
   allow_failures:
     # libstd for this target is not available yet
     - env: TARGET=i686-unknown-linux-musl
