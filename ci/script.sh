@@ -28,7 +28,7 @@ configure_cargo() {
       prefix=mipsel-openwrt-linux
       ;;
     x86_64-pc-windows-gnu)
-      prefix=x86_64-w64-mingw32-gcc
+      prefix=x86_64-w64-mingw32
       ;;
     *)
       return
