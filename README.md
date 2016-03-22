@@ -225,7 +225,7 @@ compile a C program, preferably something not trivial, and test executing it on 
 
 As to where to get the C cross toolchain, that will depend on your system. Some Linux distributions
 provide packaged cross compilers. In other cases, you'll need to compile the cross compiler
-yourself. Tools like [crostool-ng] can help with that endeavor. For Linux to OSX, check the
+yourself. Tools like [crosstool-ng] can help with that endeavor. For Linux to OSX, check the
 [osxcross] project.
 
 [crosstool-ng]: https://github.com/crosstool-ng/crosstool-ng
