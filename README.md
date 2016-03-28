@@ -94,6 +94,7 @@ text before jumping into the advanced topics section.
         - [illegal instruction](#illegal-instruction)
 - [FAQ](#faq)
     - [I want to build binaries for Linux, Mac and Windows. How do I cross compile from Linux to Mac?](#i-want-to-build-binaries-for-linux-mac-and-windows-how-do-i-cross-compile-from-linux-to-mac)
+        - [How do I build a fully statically linked Rust binary](#how-do-i-build-a-fully-statically-linked-rust-binary)
 - [License](#license)
     - [Contribution](#contribution)
 
@@ -929,6 +930,43 @@ my [rust-everywhere] project for instructions on how to do that.
 [Travis CI]: https://travis-ci.org/
 [AppVeyor]: https://www.appveyor.com/
 [rust-everywhere]: https://github.com/japaric/rust-everywhere
+
+### How do I compile fully statically linked Rust binaries?
+
+Short answer: `cargo build --target x86_64-unknown-linux-musl`
+
+For targets of the form `*-*-linux-gnu*`, `rustc` always produces binaries dynamically linked to
+`glibc` and other libraries:
+
+```
+$ cargo new --bin hello
+$ cargo build --target x86_64-unknown-linux-gnu
+$ file target/x86_64-unknown-linux-gnu/debug/hello
+target/x86_64-unknown-linux-gnu/debug/hello: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /usr/x86_64-pc-linux-gnu/lib/ld-linux-x86-64.so.2, for GNU/Linux 2.6.34, BuildID[sha1]=a3fa7281e9ded30372b5131a2feb6f1e78a6f1cd, not stripped
+$ ldd target/x86_64-unknown-linux-gnu/debug/hello
+        linux-vdso.so.1 (0x00007fff58bf4000)
+        libdl.so.2 => /usr/x86_64-pc-linux-gnu/lib/libdl.so.2 (0x00007fc4b2d3f000)
+        libpthread.so.0 => /usr/x86_64-pc-linux-gnu/lib/libpthread.so.0 (0x00007fc4b2b22000)
+        libgcc_s.so.1 => /usr/x86_64-pc-linux-gnu/lib/libgcc_s.so.1 (0x00007fc4b290c000)
+        libc.so.6 => /usr/x86_64-pc-linux-gnu/lib/libc.so.6 (0x00007fc4b2568000)
+        /usr/x86_64-pc-linux-gnu/lib/ld-linux-x86-64.so.2 (0x00007fc4b2f43000)
+        libm.so.6 => /usr/x86_64-pc-linux-gnu/lib/libm.so.6 (0x00007fc4b2272000)
+```
+
+To produce statically linked binaries, Rust provides two targets:
+`x86_64-unknown-linux-musl` and `i686-unknown-linux-musl`. The binaries produced for these targets
+are statically linked to the MUSL C library. Example below:
+
+```
+$ cargo new --bin hello
+$ cd hello
+$ multirust add-target nightly x86_64-unknown-linux-musl
+$ cargo build --target x86_64-unknown-linux-musl
+$ file target/x86_64-unknown-linux-musl/debug/hello
+target/x86_64-unknown-linux-musl/debug/hello: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=759d41b9a78d86bff9b6529d12c8fd6b934c0088, not stripped
+$ ldd target/x86_64-unknown-linux-musl/debug/hello
+        not a dynamic executable
+```
 
 ## License
 
