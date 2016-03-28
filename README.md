@@ -94,7 +94,7 @@ text before jumping into the advanced topics section.
         - [illegal instruction](#illegal-instruction)
 - [FAQ](#faq)
     - [I want to build binaries for Linux, Mac and Windows. How do I cross compile from Linux to Mac?](#i-want-to-build-binaries-for-linux-mac-and-windows-how-do-i-cross-compile-from-linux-to-mac)
-        - [How do I build a fully statically linked Rust binary](#how-do-i-build-a-fully-statically-linked-rust-binary)
+    - [How do I compile a fully statically linked Rust binary](#how-do-i-compile-a-fully-statically-linked-rust-binaries)
 - [License](#license)
     - [Contribution](#contribution)
 
@@ -931,7 +931,7 @@ my [rust-everywhere] project for instructions on how to do that.
 [AppVeyor]: https://www.appveyor.com/
 [rust-everywhere]: https://github.com/japaric/rust-everywhere
 
-### How do I compile fully statically linked Rust binaries?
+### How do I compile a fully statically linked Rust binaries?
 
 Short answer: `cargo build --target x86_64-unknown-linux-musl`
 
