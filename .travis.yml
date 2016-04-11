@@ -41,7 +41,7 @@ matrix:
     - env: TARGET=i686-unknown-linux-musl
 
 install:
-  - export PATH="$PATH:$HOME/multirust/bin"
+  - export PATH="$PATH:$HOME/.cargo/bin"
   - export STAGING_DIR="$HOME/openwrt"
   - bash ci/install.sh
   - export PATH="$PATH:$(find $STAGING_DIR -maxdepth 1 -name 'toolchain*' -print -quit)/bin"

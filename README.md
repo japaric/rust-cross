@@ -22,9 +22,9 @@ devices on a fresh Ubuntu Trusty install. The goal of this example is to show th
 is easy to setup and even easier to perform.
 
 ```
-# Install Rust, multirust heavily recommended
-$ sudo apt-get install -qq curl git
-$ curl -sf https://raw.githubusercontent.com/brson/multirust/master/quick-install.sh | sh
+# Install Rust. rustup.rs heavily recommended. See https://www.rustup.rs/ for details
+# Alternatively, you can also use multirust. See https://github.com/brson/multirust for details
+$ curl https://sh.rustup.rs -sSf | sh
 
 # Step 0: Our target is an ARMv7 device, the triple for this target is `armv7-unknown-linux-gnueabihf`
 
@@ -32,7 +32,7 @@ $ curl -sf https://raw.githubusercontent.com/brson/multirust/master/quick-instal
 $ sudo apt-get install -qq gcc-arm-linux-gnueabihf
 
 # Step 2: Install the cross compiled standard crates
-$ multirust add-target nightly armv7-unknown-linux-gnueabihf
+$ rustup target add armv7-unknown-linux-gnueabihf
 
 # Step 3: Configure cargo for cross compilation
 $ mkdir -p ~/.cargo
@@ -264,7 +264,8 @@ crate to cross compile your program. The easiest way to get it is from the [offi
 [official builds]: http://static.rust-lang.org/dist/
 
 If you are using multirust, as of 2016-03-08, you can install these crates with a single command:
-`multirust add-target nightly $rustc_target`. If you are not, follow the instructions below to
+`multirust add-target nightly $rustc_target`. If you are using rustup.rs, use the command:
+`rustup target add $rustc_target`. And if you are using neither, follow the instructions below to
 install the crates manually.
 
 The tarball you want is `$date/rust-std-nightly-$rustc_target.tar.gz`. Where `$date` usually matches
@@ -602,7 +603,7 @@ First, we need to take a closer look at your Rust installation directory, whose 
 with `rustc --print sysroot`:
 
 ```
-# I'm using multirust, you'll get a different path if you used rustup.sh or your distro package
+# I'm using rustup.rs, you'll get a different path if you used rustup.sh or your distro package
 # manager to install Rust
 $ tree -d $(rustc --print sysroot)
 ~/.multirust/toolchains/nightly
@@ -960,7 +961,7 @@ are statically linked to the MUSL C library. Example below:
 ```
 $ cargo new --bin hello
 $ cd hello
-$ multirust add-target nightly x86_64-unknown-linux-musl
+$ rustup target add x86_64-unknown-linux-musl
 $ cargo build --target x86_64-unknown-linux-musl
 $ file target/x86_64-unknown-linux-musl/debug/hello
 target/x86_64-unknown-linux-musl/debug/hello: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, BuildID[sha1]=759d41b9a78d86bff9b6529d12c8fd6b934c0088, not stripped
