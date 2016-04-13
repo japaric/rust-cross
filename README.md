@@ -17,9 +17,12 @@ along the way.
 
 ## TL;DR Ubuntu example
 
-Here are the commands necessary to set up a stable Rust toolchain as a cross compiler for ARMv7
+Here are the commands necessary to set up a stable Rust toolchain as a cross compiler for ARMv7 (\*)
 devices on a fresh Ubuntu Trusty install. The goal of this example is to show that cross compilation
 is easy to setup and even easier to perform.
+
+(\*) ARM **v7**, these instructions won't work to cross compile for the Raspberry Pi (1), that's an
+ARM **v6** device.
 
 ```
 # Install Rust, multirust heavily recommended
