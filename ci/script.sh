@@ -9,7 +9,7 @@ main() {
 }
 
 install_standard_crates() {
-  multirust add-target nightly $TARGET
+  rustup target add $TARGET
 }
 
 configure_cargo() {

@@ -1,18 +1,20 @@
 set -ex
 
-install_multirust() {
-  git clone https://github.com/brson/multirust
+install_rustup() {
+  local td=$(mktemp -d)
 
-  pushd multirust
-  ./build.sh
-  ./install.sh --prefix=~/multirust
+  pushd $td
+  curl -O https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-setup
+  chmod +x rustup-setup
+  ./rustup-setup -y
+  popd
 
-  multirust default nightly
+  rm -r $td
 
+  rustup default nightly
+    
   rustc -V
   cargo -V
-
-  popd
 }
 
 install_openwrt_sdk() {
@@ -30,7 +32,7 @@ install_openwrt_sdk() {
 }
 
 main() {
-  install_multirust
+  install_rustup
   if [ "$TARGET" = "mipsel-unknown-linux-musl" ]; then
     install_openwrt_sdk
   fi
