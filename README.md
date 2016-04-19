@@ -733,10 +733,9 @@ process. However, this approach has two problems:
     need to be created.
 
 An alternative solution that doesn't have these problems is to use a "sysroot" that holds the cross
-compiled crates. I'm implementing this approach in [`cargo-sysroot`]. For more details check the
-repository.
+compiled crates. I'm implementing this approach in [`xargo`]. For more details check the repository.
 
-[`cargo-sysroot`]: https://github.com/japaric/cargo-sysroot
+[`xargo`]: https://github.com/japaric/xargo
 
 ### Troubleshooting common problems
 
