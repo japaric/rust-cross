@@ -1,17 +1,7 @@
 set -ex
 
 install_rustup() {
-  local td=$(mktemp -d)
-
-  pushd $td
-  curl -O https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-setup
-  chmod +x rustup-setup
-  ./rustup-setup -y
-  popd
-
-  rm -r $td
-
-  rustup default nightly
+  curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain=nightly
     
   rustc -V
   cargo -V
