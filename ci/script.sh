@@ -16,6 +16,9 @@ configure_cargo() {
   local prefix
 
   case "$TARGET" in
+    aarch64-unknown-linux-gnu)
+      prefix=aarch64-linux-gnu
+      ;;
     arm*-unknown-linux-gnueabihf)
       prefix=arm-linux-gnueabihf
       ;;
