@@ -4,7 +4,9 @@ matrix:
   include:
     # Note: apt packages are the C cross compiler and the cross compiled C library
     - env: TARGET=aarch64-unknown-linux-gnu
+      os: linux
       dist: trusty
+      sudo: required
       addons:
         apt:
           packages:
