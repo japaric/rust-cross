@@ -1,5 +1,17 @@
 set -ex
 
+install_c_toolchain() {
+    case $TARGET in
+        aarch64-unknown-linux-gnu)
+            sudo apt-get install -y --force-yes --no-install-recommends \
+                 gcc-aarch64-linux-gnu libc6-arm64-cross libc6-dev-arm64-cross
+            ;;
+        *)
+            # For other targets, this is handled by addons.apt.packages in .travis.yml
+            ;;
+    esac
+}
+
 install_rustup() {
   curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain=nightly
     
@@ -22,6 +34,7 @@ install_openwrt_sdk() {
 }
 
 main() {
+  install_c_toolchain
   install_rustup
   if [ "$TARGET" = "mipsel-unknown-linux-musl" ]; then
     install_openwrt_sdk

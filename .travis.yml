@@ -6,13 +6,6 @@ matrix:
     - env: TARGET=aarch64-unknown-linux-gnu
       os: linux
       dist: trusty
-      sudo: required
-      addons:
-        apt:
-          packages:
-            - gcc-aarch64-linux-gnu
-            - libc6-arm64-cross
-            - libc6-dev-arm64-cross
     - env: TARGET=arm-unknown-linux-gnueabi
       addons:
         apt:
