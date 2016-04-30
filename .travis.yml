@@ -57,4 +57,5 @@ branches:
   only: master
 
 notifications:
-  email: false
+  email:
+    on_success: false
