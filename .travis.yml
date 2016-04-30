@@ -54,8 +54,11 @@ script:
   - bash ci/script.sh
 
 branches:
-  only: master
+  only:
+    - auto
+    - master
 
 notifications:
   email:
     on_success: false
+  webhooks: http://homu.herokuapp.com/travis
