@@ -406,7 +406,7 @@ $ cat >src/main.rs <<EOF
 $ cargo build --target=arm-unknown-linux-gnueabihf
 ```
 
-- Deploy tho binary to the target
+- Deploy the binary to the target
 
 ```
 $ scp target/arm-unknown-linux-gnueabihf/debug/foo me@arm:~
