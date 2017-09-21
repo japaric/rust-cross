@@ -219,7 +219,7 @@ The confusing part is that triples can be quite arbitrary, so your C cross compi
 be prefixed with a triple that's different from $rustc_target. For example, in Ubuntu the cross
 compiler for ARM devices is packaged as `arm-linux-gnueabihf-gcc`, the same cross compiler is
 prefixed as `armv7-unknown-linux-gnueabihf-gcc` in [Exherbo], and `rustc` uses the
-`arm-unknown-linux-gnueabihf` triple for that target. None of these triple match but they refer to
+`arm-unknown-linux-gnueabihf` triple for that target. None of these triples match, but they refer to
 the same set of systems.
 
 [Exherbo]: http://exherbo.org/
