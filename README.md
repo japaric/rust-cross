@@ -85,6 +85,7 @@ text before jumping into the advanced topics section.
 - [Cross compiling with `cargo`](#cross-compiling-with-cargo)
 - [Advanced topics](#advanced-topics)
     - [Cross compiling the standard crate](#cross-compiling-the-standard-crates)
+      - [Updated method](#updated-method)
     - [Installing the cross compiled standard crates](#installing-the-cross-compiled-standard-crates)
     - [Target specification files](#target-specification-files)
     - [Cross compiling `no_std` code](#cross-compiling-no_std-code)
@@ -430,6 +431,8 @@ FLAGS:
 
 ### Cross compiling the standard crates
 
+NOTE: There's [a subsection](#updated-method) with a slightly updated method below.
+
 Right now, you can only cross compile the standard crates if your target is supported by the Rust
 build system (RBS). You can find a list of all the supported targets in the [`mk/cfg`] directory
 (**NOTE** linked directory is **not** the latest revision). As of
@@ -598,7 +601,115 @@ liblog-db5a760f.rlib             stamp.alloc_jemalloc             stamp.test
 liblog-db5a760f.so               stamp.alloc_system
 ```
 
-The next section will tell you how to install these crates in your Rust installation directory.
+The [next section](#installing-the-cross-compiled-standard-crates) will tell you how to install
+these crates in your Rust installation directory.
+
+#### Updated method
+
+Which should be less error prone.
+
+**Note**: This section assumes you are using [rustup].
+
+[rustup]: https://rustup.rs
+
+Fetch the source code corresponding to your current toolchain using:
+
+```
+$ rustup component add rust-src
+```
+
+Check if your target is supported:
+
+```
+$ ls $(rustc --print sysroot)/lib/rustlib/src/rust/mk/cfg/*.mk | xargs -L1 basename | column -c 120
+aarch64-apple-ios.mk                    i686-apple-darwin.mk                    powerpc64-unknown-linux-gnu.mk
+aarch64-linux-android.mk                i686-linux-android.mk                   powerpc64le-unknown-linux-gnu.mk
+aarch64-unknown-linux-gnu.mk            i686-pc-windows-gnu.mk                  s390x-unknown-linux-gnu.mk
+arm-linux-androideabi.mk                i686-pc-windows-msvc.mk                 x86_64-apple-darwin.mk
+arm-unknown-linux-gnueabi.mk            i686-unknown-freebsd.mk                 x86_64-apple-ios.mk
+arm-unknown-linux-gnueabihf.mk          i686-unknown-linux-gnu.mk               x86_64-pc-windows-gnu.mk
+arm-unknown-linux-musleabi.mk           i686-unknown-linux-musl.mk              x86_64-pc-windows-msvc.mk
+arm-unknown-linux-musleabihf.mk         le32-unknown-nacl.mk                    x86_64-rumprun-netbsd.mk
+armv7-apple-ios.mk                      mips-unknown-linux-gnu.mk               x86_64-sun-solaris.mk
+armv7-linux-androideabi.mk              mips-unknown-linux-musl.mk              x86_64-unknown-bitrig.mk
+armv7-unknown-linux-gnueabihf.mk        mips-unknown-linux-uclibc.mk            x86_64-unknown-dragonfly.mk
+armv7-unknown-linux-musleabihf.mk       mips64-unknown-linux-gnuabi64.mk        x86_64-unknown-freebsd.mk
+armv7s-apple-ios.mk                     mips64el-unknown-linux-gnuabi64.mk      x86_64-unknown-linux-gnu.mk
+asmjs-unknown-emscripten.mk             mipsel-unknown-linux-gnu.mk             x86_64-unknown-linux-musl.mk
+i386-apple-ios.mk                       mipsel-unknown-linux-musl.mk            x86_64-unknown-netbsd.mk
+i586-pc-windows-msvc.mk                 mipsel-unknown-linux-uclibc.mk          x86_64-unknown-openbsd.mk
+i586-unknown-linux-gnu.mk               powerpc-unknown-linux-gnu.mk
+```
+
+Note: You must actually run this command because the list printed above is (very likely) already out
+of date by the time you read this.
+
+If your target doesn't appear in that list then Rust *doesn't* support cross compiling the standard
+crates for your target. OTOH, if your target appears on the list then there are non-zero chances
+that your target is supported and you should continue with these steps.
+
+Tell the build system what C toolchain you want to use to cross compile the standard crates:
+
+```
+$ export AR_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-ar
+$ export CC_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc
+$ export CXX_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++
+```
+
+That was an example for the `arm-unknown-linux-gnueabihf` target. Hopefully, the syntax is clear:
+
+```
+export (tool)_(underscored target)=/path/to/prefixed/tool
+```
+
+Now you are ready to build the thing:
+
+```
+$ mkdir build
+$ cd build
+$ chmod +x $(rustc --print sysroot)/lib/rustlib/src/rust/configure
+$ $(rustc --print sysroot)/lib/rustlib/src/rust/configure --enable-rustbuild --target=arm-unknown-linux-gnueabihf
+$ make
+```
+
+This will take a while because it will bootstrap (read: build 3 times) the compiler and *then* cross
+compile the standard crates, which is the only part you actually want.
+
+There are some ways to speed up the process:
+
+- If you have it, use the ninja build system to speed up building LLVM. To do this pass the
+  `--enable-ninja` flag to `configure`.
+- If you have LLVM installed, you can skip building LLVM altogether -- this shaves off *several*
+  minutes from the `make` command. To do this pass `--llvm-root=/path/to/llvm/root`, where
+  `/path/to/llvm/root` is usually `/usr` (at least on Ubuntu), to `configure`. Note that in some
+  (all?) systems you'll have to [patch Rust source code] to make this to work. Also, your system
+  llvm may be too old (as in it still has bugs that has been fixed in later versions) to [support
+  some targets]; in those cases, you'll have to build llvm from scratch: omit the `--llvm-root`
+  flag.
+
+[patch Rust source code]: https://github.com/rust-lang/rust/issues/34486#issuecomment-231617655
+[support some targets]: https://github.com/rust-lang/rust/issues/36230
+
+Once the `make` command completes, you'll find the cross compiled standard crates in the
+`build/$host/stage2/lib/rustlib/$target/lib` directory. For the `arm-unknown-linux-gnueabi` example,
+this is how that directory looks:
+
+```
+$ ls build/x86_64-unknown-linux-gnu/stage2/lib/rustlib/arm-unknown-linux-gnueabihf/lib
+liballoc-c0c12f126f4a206d.rlib              librand-29194cd220d592fa.rlib
+liballoc_jemalloc-176d67c33127b347.rlib     librustc_unicode-85b46bdfc8079262.rlib
+liballoc_system-c0c51b6c4bd14824.rlib       libstd-ce322496be35bb37.rlib
+libcollections-3692a30d95318010.rlib        libstd-ce322496be35bb37.so
+libcompiler_builtins-b79e369ba4151c95.rlib  libstd_shim-5ef9f777f4c3ea49.rlib
+libcore-cff9ff90c18d805e.rlib               libterm-3308c04782eb637f.rlib
+libgetopts-82f0db47f1e7af28.rlib            libterm-3308c04782eb637f.so
+libgetopts-82f0db47f1e7af28.so              libtest-722116892b4ed08b.rlib
+liblibc-3b9005e31309cbb1.rlib               libtest-722116892b4ed08b.so
+libpanic_abort-09d87c702ec4987d.rlib        libtest_shim-84e2d1c577e6d799.rlib
+libpanic_unwind-a907c8d2f40bec80.rlib       libunwind-d6a89fc158ba5313.rlib
+```
+
+The section below explains how to "install" these crates.
 
 ### Installing the cross compiled standard crates
 
