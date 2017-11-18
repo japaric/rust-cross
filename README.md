@@ -860,6 +860,44 @@ $ ./hello
 Hello, world!
 ```
 
+**Symptom**
+
+```
+# On target
+$ ./hello
+= note: /usr/bin/ld: cannot find Scrt1.o: No such file or directory
+/usr/bin/ld: cannot find crti.o: No such file or directory
+/usr/bin/ld: cannot find -lutil
+/usr/bin/ld: cannot find -lutil
+/usr/bin/ld: cannot find -ldl
+/usr/bin/ld: cannot find -lrt
+/usr/bin/ld: cannot find -lpthread
+/usr/bin/ld: cannot find -lpthread
+/usr/bin/ld: skipping incompatible /usr/lib/gcc/x86_64-linux-gnu/5/libgcc_s.so when searching for -lgcc_s
+/usr/bin/ld: cannot find -lgcc_s
+/usr/bin/ld: cannot find -lc
+/usr/bin/ld: cannot find -lm
+/usr/bin/ld: cannot find -lrt
+/usr/bin/ld: cannot find -lpthread
+/usr/bin/ld: cannot find -lutil
+/usr/bin/ld: cannot find crtn.o: No such file or directory
+collect2: error: ld returned 1 exit status
+```
+**Cause**
+
+Your target system is missing the library gcc-multilib
+
+**Solution**
+
+Install the missing library:
+
+```
+# target system is an Linux device
+$ sudo apt-get install gcc-multilib
+$ ./hello
+Hello, world!
+```
+
 #### `$symbol` not found
 
 **Symptom**
