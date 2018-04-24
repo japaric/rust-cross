@@ -344,7 +344,7 @@ Hello, world!
 ## Cross compiling with `cargo`
 
 To cross compile with cargo, we must first use its [configuration system] to set the proper linker
-and archiver for the target. Once set, we only need to pass the `--target` flag to cargo commands.
+for the target. Once set, we only need to pass the `--target` flag to cargo commands.
 
 [configuration system]: http://doc.crates.io/config.html
 
@@ -376,7 +376,7 @@ version = "0.1.0"
 clap = "2.0.4"
 ```
 
-- Configure the target linker and archiver only for this project.
+- Configure the target linker only for this project.
 
 ```
 $ mkdir .cargo
