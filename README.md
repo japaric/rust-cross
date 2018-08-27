@@ -917,6 +917,48 @@ system. Among the possible causes of this problem we have:
     with soft float support. Hint: look for the flag `--with-float` in the output of
     `$gcc_prefix-gcc -v`.
 
+#### executable not found on target, even if it's there
+
+**Symptom**
+
+```
+# on target
+$ ls -l hello
+-rwxr-xr-x    1 root     root       4623384 Aug 27 00:53 hello
+$ ./hello
+-sh: ./hello: not found
+```
+
+**Cause**
+
+This can be indicative of a [missing dependency] due to a mismatch in library paths. You can confirm
+that this is the case using `file`:
+
+```
+# on host
+$ file target/armv7-unknown-linux-gnueabihf/debug/hello
+target/armv7-unknown-linux-gnueabihf/debug/hello: ELF 32-bit LSB pie executable ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 3.2.0, BuildID[sha1]=1886ca80caec92561d258032b2e060673bf3e432, with debug_info, not stripped
+# on target
+$ ls /lib/ld-linux*
+/lib/ld-linux.so.3
+# notice disparity between /lib/ld-linux.so.3 and /lib/ld-linux-armhf.so.3
+```
+
+**Solution**
+
+Symlink the actual file to the expected location, or change the build parameters to link against the proper directory
+
+For the latter, in `.cargo/config`, add the following after the `linker=` line:
+
+```
+rustflags = [
+  "-C", "link-arg=-Wl,--dynamic-linker",
+  "-C", "link-arg=-Wl,/lib/ld-linux.so.3"
+]
+```
+
+[missing dependency]: https://unix.stackexchange.com/a/18079/41507
+
 ## FAQ
 
 ### I want to build binaries for Linux, Mac and Windows. How do I cross compile from Linux to Mac?
