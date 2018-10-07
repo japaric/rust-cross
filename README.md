@@ -201,7 +201,7 @@ If you didn't find a triple that matches your target system, then you are going 
 From this point forwards, I'll use the term **$rustc_target** to refer to the triple you found in
 this section. For example, if you found that your target is `arm-unknown-linux-gnueabihf`, then
 whenever you see something like `--target=$rustc_target` mentally expand the `$rustc_target` bit so
-you end with `--target=arm-unknown-linux-gnueaibhf`.
+you end with `--target=arm-unknown-linux-gnueabihf`.
 
 Similarly, I'll use the **$host** term to refer to the host triple. You can find this triple in the
 `rustc -Vv` output under the host field. For example, my host system has triple
@@ -264,7 +264,7 @@ compilation tools (i.e. the cross toolchain) you installed in this section.
 Most Rust programs link to the `std` crate, so at the very least you'll need a cross compiled `std`
 crate to cross compile your program. The easiest way to get it is from the [official builds].
 
-[official builds]: http://static.rust-lang.org/dist/
+[official builds]: https://static.rust-lang.org/dist/index.html
 
 If you are using multirust, as of 2016-03-08, you can install these crates with a single command:
 `multirust add-target nightly $rustc_target`. If you are using rustup.rs, use the command:
@@ -279,7 +279,7 @@ For example, for a `arm-unknown-linux-gnueabihf` target and a `rustc` with versi
 `rustc 1.8.0-nightly (3c9442fc5 2016-02-04)` this is the correct tarball:
 
 ```
-http://static.rust-lang.org/dist/2016-02-04/rust-std-beta-arm-unknown-linux-gnueabihf.tar.gz
+https://static.rust-lang.org/dist/2016-02-04/rust-std-beta-arm-unknown-linux-gnueabihf.tar.gz
 ```
 
 To install the tarball use the `install.sh` script that's inside the tarball:
@@ -346,7 +346,7 @@ Hello, world!
 To cross compile with cargo, we must first use its [configuration system] to set the proper linker
 and archiver for the target. Once set, we only need to pass the `--target` flag to cargo commands.
 
-[configuration system]: http://doc.crates.io/config.html
+[configuration system]: https://doc.rust-lang.org/cargo/reference/config.html
 
 Cargo configuration is stored in a TOML file, the key we are interested in is
 `target.$rustc_target.linker`. The value to store in this key is
@@ -703,7 +703,7 @@ $ rustc --target path/to/thumbv7m-none-eabi.json (...)
 The other is to simply pass the ["file stem"] of the file to `--target`, but then the file must be
 in the working directory or in the directory specified by the `RUST_TARGET_PATH` variable.
 
-["file stem"]: http://doc.rust-lang.org/std/path/struct.Path.html#method.file_stem
+["file stem"]: https://doc.rust-lang.org/std/path/struct.Path.html#method.file_stem
 
 ```
 # Target specification file is in the working directory
@@ -782,7 +782,7 @@ version.
 If you are on the nightly channel and installed an official build, you probably got the date of the
 tarball wrong. Try a different date.
 
-[official build]: http://static.rust-lang.org/dist/
+[official build]: https://static.rust-lang.org/dist/index.html
 
 If you cross compiled the crates from source, then you checked out the wrong commit of the source.
 You'll have the build the crates again, but making sure you check out the repository at the right
@@ -976,8 +976,8 @@ $ ldd target/x86_64-unknown-linux-musl/debug/hello
 Licensed under either of
 
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
-  http://www.apache.org/licenses/LICENSE-2.0)
-- MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+  https://www.apache.org/licenses/LICENSE-2.0)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
 
 at your option.
 
