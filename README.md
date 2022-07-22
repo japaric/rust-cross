@@ -24,7 +24,7 @@ is easy to setup and even easier to perform.
 (\*) ARM **v7**, these instructions won't work to cross compile for the Raspberry Pi (1), that's an
 ARM **v6** device.
 
-```
+```sh
 # Install Rust. rustup.rs heavily recommended. See https://www.rustup.rs/ for details
 # Alternatively, you can also use multirust. See https://github.com/brson/multirust for details
 $ curl https://sh.rustup.rs -sSf | sh
@@ -40,9 +40,9 @@ $ rustup target add armv7-unknown-linux-gnueabihf
 # Step 3: Configure cargo for cross compilation
 $ mkdir -p ~/.cargo
 $ cat >>~/.cargo/config <<EOF
-> [target.armv7-unknown-linux-gnueabihf]
-> linker = "arm-linux-gnueabihf-gcc"
-> EOF
+[target.armv7-unknown-linux-gnueabihf]
+linker = "arm-linux-gnueabihf-gcc"
+EOF
 
 # Test cross compiling a Cargo project
 $ cargo new --bin hello
@@ -168,7 +168,7 @@ there's a match. If you have a nightly-2016-02-14, 1.8.0-beta.1 or newer `rustc`
 `rustc --print target-list` command to get the full list of supported targets. Here's the list of
 supported targets as of 1.8.0-beta.1:
 
-```
+```sh
 $ rustc --print target-list | pr -tw100 --columns 3
 aarch64-apple-ios                i686-pc-windows-gnu              x86_64-apple-darwin
 aarch64-linux-android            i686-pc-windows-msvc             x86_64-apple-ios
@@ -284,7 +284,7 @@ http://static.rust-lang.org/dist/2016-02-04/rust-std-beta-arm-unknown-linux-gnue
 
 To install the tarball use the `install.sh` script that's inside the tarball:
 
-```
+```sh
 $ tar xzf rust-std-nightly-arm-unknown-linux-gnueabihf.tar.gz
 $ cd rust-std-nightly-arm-unknown-linux-gnueabihf
 $ ./install.sh --prefix=$(rustc --print sysroot)
@@ -317,7 +317,7 @@ Next, an example to test the cross compilation setup so far:
 
 - Create a hello world program on the host
 
-```
+```sh
 $ cat hello.rs
 fn main() {
     println!("Hello, world!");
@@ -326,7 +326,7 @@ fn main() {
 
 - Cross compile the program on the host
 
-```
+```sh
 $ rustc \
     --target=arm-unknown-linux-gnueabihf \
     -C linker=arm-linux-gnueabihf-gcc \
@@ -335,7 +335,7 @@ $ rustc \
 
 - Run the program on the target
 
-```
+```sh
 $ scp hello me@arm:~
 $ ssh me@arm ./hello
 Hello, world!
@@ -357,14 +357,14 @@ Let's go over an example:
 
 - Create a new binary Cargo project.
 
-```
+```sh
 $ cargo new --bin foo
 $ cd foo
 ```
 
 - Add a dependency to the project.
 
-```
+```sh
 $ echo 'clap = "2.0.4"' >> Cargo.toml
 $ cat Cargo.toml
 [package]
@@ -378,37 +378,37 @@ clap = "2.0.4"
 
 - Configure the target linker and archiver only for this project.
 
-```
+```sh
 $ mkdir .cargo
 $ cat >.cargo/config <<EOF
-> [target.arm-unknown-linux-gnueabihf]
-> linker = "arm-linux-gnueabihf-gcc"
-> EOF
+[target.arm-unknown-linux-gnueabihf]
+linker = "arm-linux-gnueabihf-gcc"
+EOF
 ```
 
 - Write the application
 
-```
+```sh
 $ cat >src/main.rs <<EOF
-> extern crate clap;
->
-> use clap::App;
->
-> fn main() {
->     let _ = App::new("foo").version("0.1.0").get_matches();
-> }
-> EOF
+extern crate clap;
+
+use clap::App;
+
+fn main() {
+    let _ = App::new("foo").version("0.1.0").get_matches();
+}
+EOF
 ```
 
 - Build the project for the target
 
-```
+```sh
 $ cargo build --target=arm-unknown-linux-gnueabihf
 ```
 
 - Deploy the binary to the target
 
-```
+```sh
 $ scp target/arm-unknown-linux-gnueabihf/debug/foo me@arm:~
 ```
 
@@ -493,7 +493,7 @@ Has commit hash: `3c9442fc503fe397b8d3495d5a7f9e599ad63cf6`.
 Next you need to fetch Rust source and check it out at that exact commit hash. Don't omit the
 checkout or you'll end with crates that are unusable by your compiler.
 
-```
+```sh
 $ git clone https://github.com/rust-lang/rust
 $ cd rust
 $ git checkout $rustc_commit_hash
@@ -504,7 +504,7 @@ $rustc_commit_hash
 
 Next we prepare a build directory for an out of source build.
 
-```
+```sh
 # Anywhere
 $ mkdir build
 $ cd build
@@ -517,7 +517,7 @@ optimized build.
 
 Next we kick off the build:
 
-```
+```sh
 $ make -j$(nproc)
 ```
 
@@ -537,7 +537,7 @@ cross compiler is `armv7-unknown-linux-gnueabihf-gcc`, but the RBS, when buildin
 
 This can be easily fixed with some shim binaries:
 
-```
+```sh
 # In the build directory
 $ mkdir .shims
 $ cd .shims
@@ -549,7 +549,7 @@ $ export PATH=$(pwd)/.shims:$PATH
 
 Now you should be able to call both `$gcc_prefix-gcc` and `$rbs_prefix-gcc`. For example:
 
-```
+```sh
 # My installed cross compiler
 $ armv7-unknown-linux-gnueabihf-gcc -v
 Using built-in specs.
@@ -576,7 +576,7 @@ You can now resume the build with `make -j$(nproc)`.
 Hopefully the build will complete successfully and your cross compiled crates will be available in
 the `$host/stage2/lib/rustlib/$rustc_target/lib` directory.
 
-```
+```sh
 # In the build directory
 $ ls x86_64-unknown-linux-gnu/stage2/lib/rustlib/arm-unknown-linux-gnueabihf/lib
 liballoc-db5a760f.rlib           librand-db5a760f.rlib            stamp.arena
@@ -605,7 +605,7 @@ The next section will tell you how to install these crates in your Rust installa
 First, we need to take a closer look at your Rust installation directory, whose path you can get
 with `rustc --print sysroot`:
 
-```
+```sh
 # I'm using rustup.rs, you'll get a different path if you used rustup.sh or your distro package
 # manager to install Rust
 $ tree -d $(rustc --print sysroot)
@@ -632,7 +632,7 @@ compiled crates must be installed right next to that directory. Following the ex
 previous section, the following command will copy the standard crates built by the RBS in the right
 place.
 
-```
+```sh
 # In the 'build' directory
 $ cp -r \
     $host/stage2/lib/rustlib/$target
@@ -641,7 +641,7 @@ $ cp -r \
 
 Finally, we check that the crates are in the right place.
 
-```
+```sh
 $ tree $(rustc --print sysroot)/lib/rustlib
 /home/japaric/.multirust/toolchains/nightly/lib/rustlib
 ├── (...)
@@ -696,7 +696,7 @@ A list of all the possible keys and their effect on compilation can be found in 
 There are two ways to pass these target specification files to `rustc`, the first is pass the full
 path via the `--target` flag.
 
-```
+```sh
 $ rustc --target path/to/thumbv7m-none-eabi.json (...)
 ```
 
@@ -705,7 +705,7 @@ in the working directory or in the directory specified by the `RUST_TARGET_PATH`
 
 ["file stem"]: http://doc.rust-lang.org/std/path/struct.Path.html#method.file_stem
 
-```
+```sh
 # Target specification file is in the working directory
 $ ls thumbv7m-none-eabi.json
 thumbv7m-none-eabi.json
@@ -747,7 +747,7 @@ This section: What to do when things go wrong.
 
 **Symptom**
 
-```
+```sh
 $ cargo build --target $rustc_target
 error: can't find crate for `$crate`
 ```
@@ -767,7 +767,7 @@ Check the [Installing the cross compiled standard crates] section and make sure 
 
 **Symptom**
 
-```
+```sh
 $ cargo build --target $rustc_target
 error: the crate `$crate` has been compiled with rustc $version-$channel ($hash $date), which is incompatible with this version of rustc
 ```
@@ -792,7 +792,7 @@ commit (it must match the commit-hash field of `rustc -Vv` output).
 
 **Symptom**
 
-```
+```sh
 $ cargo build --target $rustc_target
 /path/to/some/file.c:$line: undefined reference to `$symbol`
 ```
@@ -826,7 +826,7 @@ C cross toolchain to build the standard crates and to cross compile Rust program
 
 **Symptom**
 
-```
+```sh
 # On target
 $ ./hello
 ./hello: can't load library 'libpthread.so.0'
@@ -836,7 +836,7 @@ $ ./hello
 
 Your target system is missing a shared library. You can confirm this with `ldd`:
 
-```
+```sh
 # Or `LD_TRACE_LOADED_OBJECTS=1 ./hello` on uClibc-based OpenWRT devices
 $ ldd hello
         libdl.so.0 => /lib/libdl.so.0 (0x771ba000)
@@ -853,7 +853,7 @@ All the missing libraries are marked with "not found".
 
 Install the missing shared libraries in your target system. Continuing the previous example:
 
-```
+```sh
 # target system is an OpenWRT device
 $ opkg install libpthread
 $ ./hello
@@ -864,7 +864,7 @@ Hello, world!
 
 **Symptom**
 
-```
+```sh
 # On target
 $ ./hello
 rustc: /path/to/$c_library.so: version `$symbol' not found (required by /path/to/$rust_library.so).
@@ -888,7 +888,7 @@ library that may be installed in the host.
 
 **Symptom**
 
-```
+```sh
 # on target
 $ ./hello
 Illegal instruction
@@ -941,7 +941,7 @@ Short answer: `cargo build --target x86_64-unknown-linux-musl`
 For targets of the form `*-*-linux-gnu*`, `rustc` always produces binaries dynamically linked to
 `glibc` and other libraries:
 
-```
+```sh
 $ cargo new --bin hello
 $ cargo build --target x86_64-unknown-linux-gnu
 $ file target/x86_64-unknown-linux-gnu/debug/hello
@@ -960,7 +960,7 @@ To produce statically linked binaries, Rust provides two targets:
 `x86_64-unknown-linux-musl` and `i686-unknown-linux-musl`. The binaries produced for these targets
 are statically linked to the MUSL C library. Example below:
 
-```
+```sh
 $ cargo new --bin hello
 $ cd hello
 $ rustup target add x86_64-unknown-linux-musl
